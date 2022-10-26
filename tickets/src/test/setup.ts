@@ -3,6 +3,7 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import { app } from '../app';
 import jwt from 'jsonwebtoken';
+import { isJSDocTypedefTag } from 'typescript';
 
 let mongo: any;
 
@@ -14,7 +15,10 @@ beforeAll(async () => {
   await mongoose.connect(mongoUri, {});
 });
 
+jest.mock('../nats-wrapper');
+
 beforeEach(async () => {
+  jest.clearAllMocks();
   const collections = await mongoose.connection.db.collections();
 
   for (let collection of collections) {
